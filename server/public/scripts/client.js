@@ -5,8 +5,8 @@ let times =  '*';
 let divide = '/';
 let numOne = $('#numberOne').val();
 let numTwo = $('#numberTwo').val();
-//let add = $('#plus');
-let calculated = {numberOne: numOne, numberTwo: numTwo};
+let add = $('#plus');
+let calculate = {numberOne: numOne, numberTwo: numTwo, operator: '+' };
 
 
      
@@ -17,21 +17,12 @@ let calculated = {numberOne: numOne, numberTwo: numTwo};
           
       
 
-        // $.ajax({
-        // type: 'POST',
-        // data: calculated,
-        // url:'/calculated',
-        //     }).done(function(response){
-        //             console.log('SUCCESS!');
-        //     }).fail(function(response){
-        //         alert('something went wrong...');
-        //     })
-            ////
+   
 
 function submitNumbers() {
     let numOne = $('#numberOne').val();
     let numTwo = $('#numberTwo').val();
-    let calculate = {numberOne: numOne, numberTwo: numTwo};
+    let calculate = {numberOne: numOne, numberTwo: numTwo, operator: plus};
     $.ajax({
         type: 'post',
         data: calculate,

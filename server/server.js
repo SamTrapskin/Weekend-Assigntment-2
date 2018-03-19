@@ -29,16 +29,9 @@ app.listen(PORT, () => {
     console.log('listening on port', PORT);
   });
 
-  app.get( (req, res) =>{
+  app.post( (req, res) =>{
     function doTheMath () {
     if('#plus' === '+') 
     console.log((numOne+numTwo));
-    else if('#minus' === '-') 
-    console.log((numOne - numTwo));
-    else if('#divide' === '/') 
-    console.log((numOne / numTwo));
-    else if('#mult' === '*') 
-    console.log((numOne * numTwo))
-      res.send(doTheMath);
     }
   });
