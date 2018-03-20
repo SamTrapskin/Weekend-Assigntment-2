@@ -1,116 +1,72 @@
 $(document.ready).ready(readyNow);
-let plus = '+';
-let minus = '-';
-let times =  '*';
-let divide = '/';
+
 let numOne = $('#numberOne').val();
 let numTwo = $('#numberTwo').val();
-let add = $('#plus');
-let calculate = {numberOne: numOne, numberTwo: numTwo, operator: '+' };
+let operator = $('#typeIn');
+
+let numsToCalculate = {numberOne: numOne, numberTwo: numTwo, operator: operator };
 
 
      
           function readyNow () {
          console.log('JS is ready');
-        $('#plus').on('click', submitNumbers);
-         }
-          
-      
+        $('#equals').on('click', function(){
+            console.log(  'on click' );
+            // capture user input & store in an object
+            let numsToSend = {
+                numberOne: $( '#numberOne' ).val(),
+                numberTwo: $( '#numberTwo' ).val(),
+                operator: $( '#typeIn' )
+            }; // end objectToSend
+            console.log( 'objectToSend:', numsToSend ); 
+            // send object to server with AJAX
+            $.ajax({
+                type: 'POST',
+                url: '/mathButton',
+                data: numsToSend
+            }).done( function( response ){
+                console.log( 'back from POST with:', response );
+                getAnswer();
+            }); // end ajax
+            // display answer on DOM
+        }); // end doMathButton on click
 
-   
+        function getAnswer(){
+            $.ajax({
+                type: 'GET',
+                url: '/answer'
+            }).done( function( response ){
+                console.log( 'back from GET with:', response );
+                let outputDiv = $( '#history' );
+                outputDiv.empty();
+                outputDiv.append( response.answer );
+                getHistory();
+            }); // end get answer
+        } // end getAnswer
+    }
 
-function submitNumbers() {
-    let numOne = $('#numberOne').val();
-    let numTwo = $('#numberTwo').val();
-    let calculate = {numberOne: numOne, numberTwo: numTwo, operator: plus};
+
+
+function getHistory(){
+    // ajax call to /history
     $.ajax({
-        type: 'post',
-        data: calculate,
-        url: '/calculate'
-    }).done(function(response) {
-        // our response from a POST will just be '200' success
-        console.log('SUCCESS!');
-        // Refresh our game list
-        
-    }).fail(function(response) {
-        alert('Something went wrong...');
-    })
+        type: 'GET',
+        url: '/history'
+    }).done( function( response ){
+        console.log( response );
+        // target the output element
+        let outputElement = $( '#history' );
+        outputElement.empty();
+        for( let i = 0; i<response.length; i++ ) {
+            console.log(  response[i] );
+            let outputString = '<li>';
+            outputString += response[i].x + ' ';
+            outputString += response[i].type + ' ';
+            outputString += response[i].y;
+            outputString += '</li>';
+            outputElement.append( outputString );
+        } //end for
+    }); //end ajax
+    // display history on DOM
 }
-        
-        
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            ///
-        function showCalcHistory () {
-        $.ajax({
-            type: "GET",
-            url: '/number'
-          }).done(function(){
-            appendToDom(response);
-          })
-        }
-
-        function appendToDom(showCalcHistory){
-            $('#answerHistory').empty();
-            
-              let tr = $("<tr></tr>");
-              tr.append('<td>' + num1+num2 + '</td>');
-             
-              $('#answerHistory').append(tr);
-              
-            }
-        
-
-
-
-
-
-        // function numsMinus () {
-        //     num1 - num2
-        // }
-
-        // function numsMult () {
-        //     num1 * num2
-        // }
-
-        // function numsDivide () {
-        //     num1 / num2
-        // }
-        // function getAddAnswer() {
-        //     $.ajax({
-        //       type: 'GET',
-        //       url: '/addition',
-        //     }).done(function(response) {
-        //         console.log("SUCCESS!!!");
-        //         // append products to the dom
-        //         addProductsToDOM(response);
-        //     }).fail(function(response) {
-        //         // notify the user
-        //         alert('request failed');
-        //       }
-        //     );
-        //   }
-        //   function addNumbersToDOM(products) {
-        //     for(let i = 0; i < products.length; i += 1) {
-        //       // append to the dom
-        //     }
-        //   
+          
